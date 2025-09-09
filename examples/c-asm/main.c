@@ -26,37 +26,84 @@ void print_hex(uint32_t num) {
     }
 }
 
+// === Implementación propia de strlen (no usar <string.h>) ===
+int my_strlen(const char *str) {
+    int len = 0;
+    while (*str++) len++;
+    return len;
+}
+
+// Imprimir 8 bytes de un bloque como caracteres ASCII
+void print_block_as_text(uint32_t block[2]) {
+    char buf[9];
+    buf[0] = (block[0] >> 24) & 0xFF;
+    buf[1] = (block[0] >> 16) & 0xFF;
+    buf[2] = (block[0] >> 8) & 0xFF;
+    buf[3] = block[0] & 0xFF;
+    buf[4] = (block[1] >> 24) & 0xFF;
+    buf[5] = (block[1] >> 16) & 0xFF;
+    buf[6] = (block[1] >> 8) & 0xFF;
+    buf[7] = block[1] & 0xFF;
+    buf[8] = '\0';
+    print_string(buf);
+}
+
+// Preparar bloque de 8 bytes con padding en ceros
+void prepare_block(const char* str, int offset, uint32_t block[2]) {
+    uint8_t temp[8] = {0};
+    int len = my_strlen(str + offset);
+    if (len > 8) len = 8;
+
+    for (int i = 0; i < len; i++) {
+        temp[i] = (uint8_t)str[offset + i];
+    }
+
+    block[0] = (temp[0]<<24) | (temp[1]<<16) | (temp[2]<<8) | temp[3];
+    block[1] = (temp[4]<<24) | (temp[5]<<16) | (temp[6]<<8) | temp[7];
+}
+
 // === Programa principal ===
 void main() {
-    // Mensaje de 64 bits = "HOLA1234"
-    uint32_t block[2] = {0x484F4C41, 0x31323334}; // ASCII en hex
+    char mensaje[] = "HOLA1234";  // Cadena de ejemplo
+    int len = my_strlen(mensaje);
+
     // Clave de 128 bits
     uint32_t key[4] = {0x12345678, 0x9ABCDEF0, 0xFEDCBA98, 0x76543210};
 
     print_string("=== Test TEA en RISC-V ===\n");
 
-    // Mostrar bloque original
+    // Mostrar texto original
     print_string("Texto original:\n");
-    print_hex(block[0]); print_char(' ');
-    print_hex(block[1]); print_char('\n');
+    print_string(mensaje);
+    print_char('\n');
 
-    // Cifrado
-    tea_encrypt_asm(block, key);
+    // Cifrado bloque por bloque
+    print_string("Texto cifrado (hex):\n");
+    for (int i = 0; i < len; i += 8) {
+        uint32_t block[2];
+        prepare_block(mensaje, i, block);
 
-    print_string("Texto cifrado:\n");
-    print_hex(block[0]); print_char(' ');
-    print_hex(block[1]); print_char('\n');
+        tea_encrypt_asm(block, key);
 
-    // Descifrado
-    tea_decrypt_asm(block, key);
+        print_hex(block[0]); print_char(' ');
+        print_hex(block[1]); print_char('\n');
+    }
 
+    // Descifrado de nuevo bloque por bloque
     print_string("Texto descifrado:\n");
-    print_hex(block[0]); print_char(' ');
-    print_hex(block[1]); print_char('\n');
+    for (int i = 0; i < len; i += 8) {
+        uint32_t block[2];
+        prepare_block(mensaje, i, block);
+
+        tea_encrypt_asm(block, key);   // cifrar
+        tea_decrypt_asm(block, key);   // descifrar
+
+        print_block_as_text(block);    // mostrar como texto
+    }
+    print_char('\n');
 
     print_string("=== Fin del test ===\n");
 
-    // Loop infinito
     while (1) {
         __asm__ volatile("nop");
     }
