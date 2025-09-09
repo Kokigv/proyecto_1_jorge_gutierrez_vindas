@@ -64,46 +64,93 @@ void prepare_block(const char* str, int offset, uint32_t block[2]) {
 
 // === Programa principal ===
 void main() {
-    char mensaje[] = "HOLA1234";  // Cadena de ejemplo
-    int len = my_strlen(mensaje);
+    // ======================
+    // PRUEBA 1: Un solo bloque ("HOLA1234")
+    // ======================
+    char mensaje1[] = "HOLA1234";
+    int len1 = my_strlen(mensaje1);
 
-    // Clave de 128 bits
-    uint32_t key[4] = {0x12345678, 0x9ABCDEF0, 0xFEDCBA98, 0x76543210};
+    // Clave de 128 bits (según enunciado de la Prueba 1)
+    uint32_t key1[4] = {0x12345678, 0x9ABCDEF0, 0xFEDCBA98, 0x76543210};
 
-    print_string("=== Test TEA en RISC-V ===\n");
+    print_string("=== Prueba 1: Bloque unico ===\n");
 
     // Mostrar texto original
     print_string("Texto original:\n");
-    print_string(mensaje);
+    print_string(mensaje1);
     print_char('\n');
 
     // Cifrado bloque por bloque
     print_string("Texto cifrado (hex):\n");
-    for (int i = 0; i < len; i += 8) {
+    for (int i = 0; i < len1; i += 8) {
         uint32_t block[2];
-        prepare_block(mensaje, i, block);
+        prepare_block(mensaje1, i, block);
 
-        tea_encrypt_asm(block, key);
+        tea_encrypt_asm(block, key1);
 
         print_hex(block[0]); print_char(' ');
         print_hex(block[1]); print_char('\n');
     }
 
-    // Descifrado de nuevo bloque por bloque
+    // Descifrado
     print_string("Texto descifrado:\n");
-    for (int i = 0; i < len; i += 8) {
+    for (int i = 0; i < len1; i += 8) {
         uint32_t block[2];
-        prepare_block(mensaje, i, block);
+        prepare_block(mensaje1, i, block);
 
-        tea_encrypt_asm(block, key);   // cifrar
-        tea_decrypt_asm(block, key);   // descifrar
+        tea_encrypt_asm(block, key1);   // cifrar
+        tea_decrypt_asm(block, key1);   // descifrar
 
-        print_block_as_text(block);    // mostrar como texto
+        print_block_as_text(block);
     }
     print_char('\n');
+    print_string("=== Fin Prueba 1 ===\n\n");
 
-    print_string("=== Fin del test ===\n");
 
+    // ======================
+    // PRUEBA 2: Multiples bloques ("Mensaje de prueba para TEA")
+    // ======================
+    char mensaje2[] = "HOLA1234";
+    int len2 = my_strlen(mensaje2);
+
+    // Otra clave (puede ser distinta, pero también válida de 128 bits)
+    uint32_t key2[4] = {0xA56BABCD, 0x0000FFFF, 0xABCDEF01, 0x12345678};
+
+    print_string("=== Prueba 2: Multiples bloques ===\n");
+
+    // Mostrar texto original
+    print_string("Texto original:\n");
+    print_string(mensaje2);
+    print_char('\n');
+
+    // Cifrado bloque por bloque
+    print_string("Texto cifrado (hex):\n");
+    for (int i = 0; i < len2; i += 8) {
+        uint32_t block[2];
+        prepare_block(mensaje2, i, block);
+
+        tea_encrypt_asm(block, key2);
+
+        print_hex(block[0]); print_char(' ');
+        print_hex(block[1]); print_char('\n');
+    }
+
+    // Descifrado bloque por bloque
+    print_string("Texto descifrado:\n");
+    for (int i = 0; i < len2; i += 8) {
+        uint32_t block[2];
+        prepare_block(mensaje2, i, block);
+
+        tea_encrypt_asm(block, key2);   // cifrar
+        tea_decrypt_asm(block, key2);   // descifrar
+
+        print_block_as_text(block);
+    }
+    print_char('\n');
+    print_string("=== Fin Prueba 2 ===\n");
+
+
+    // Loop infinito
     while (1) {
         __asm__ volatile("nop");
     }
