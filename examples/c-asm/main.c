@@ -1,15 +1,40 @@
-// main.c - Programa en C que usa TEA en ensamblador RISC-V
+// Simple C program that calls assembly function
+// This demonstrates C+assembly integration in RISC-V
 
-#include <stdint.h>
+// Assembly function declaration
+extern int sum_to_n(int n);
 
-// Declaración de funciones en ensamblador
-extern void tea_encrypt_asm(uint32_t v[2], const uint32_t key[4]);
-extern void tea_decrypt_asm(uint32_t v[2], const uint32_t key[4]);
-
-// === Funciones simples de impresión (bare-metal UART en QEMU) ===
+// Simple implementation of basic functions since we're in bare-metal environment
 void print_char(char c) {
+    // In a real bare-metal environment, this would write to UART
+    // For now, this is just a placeholder
     volatile char *uart = (volatile char*)0x10000000;
     *uart = c;
+}
+
+void print_number(int num) {
+    if (num == 0) {
+        print_char('0');
+        return;
+    }
+    
+    if (num < 0) {
+        print_char('-');
+        num = -num;
+    }
+    
+    char buffer[10];
+    int i = 0;
+    
+    while (num > 0) {
+        buffer[i++] = '0' + (num % 10);
+        num /= 10;
+    }
+    
+    // Print digits in reverse order
+    while (i > 0) {
+        print_char(buffer[--i]);
+    }
 }
 
 void print_string(const char* str) {
@@ -18,46 +43,29 @@ void print_string(const char* str) {
     }
 }
 
-void print_hex(uint32_t num) {
-    char hex_chars[] = "0123456789ABCDEF";
-    for (int i = 7; i >= 0; i--) {
-        uint8_t nibble = (num >> (i * 4)) & 0xF;
-        print_char(hex_chars[nibble]);
-    }
-}
-
-// === Programa principal ===
+// Entry point for C program
 void main() {
-    // Mensaje de 64 bits = "HOLA1234"
-    uint32_t block[2] = {0x484F4C41, 0x31323334}; // ASCII en hex
-    // Clave de 128 bits
-    uint32_t key[4] = {0x12345678, 0x9ABCDEF0, 0xFEDCBA98, 0x76543210};
-
-    print_string("=== Test TEA en RISC-V ===\n");
-
-    // Mostrar bloque original
-    print_string("Texto original:\n");
-    print_hex(block[0]); print_char(' ');
-    print_hex(block[1]); print_char('\n');
-
-    // Cifrado
-    tea_encrypt_asm(block, key);
-
-    print_string("Texto cifrado:\n");
-    print_hex(block[0]); print_char(' ');
-    print_hex(block[1]); print_char('\n');
-
-    // Descifrado
-    tea_decrypt_asm(block, key);
-
-    print_string("Texto descifrado:\n");
-    print_hex(block[0]); print_char(' ');
-    print_hex(block[1]); print_char('\n');
-
-    print_string("=== Fin del test ===\n");
-
-    // Loop infinito
+    // Test the assembly function with different values
+    int test_values[] = {5, 10, 15, 0, -1};
+    int num_tests = 5;
+    
+    print_string("Testing sum_to_n assembly function:\n");
+    
+    for (int i = 0; i < num_tests; i++) {
+        int n = test_values[i];
+        int result = sum_to_n(n);
+        
+        print_string("sum_to_n(");
+        print_number(n);
+        print_string(") = ");
+        print_number(result);
+        print_string("\n");
+    }
+    
+    print_string("Tests completed.\n");
+    
+    // Infinite loop to keep program running
     while (1) {
-        __asm__ volatile("nop");
+        __asm__ volatile ("nop");
     }
 }
