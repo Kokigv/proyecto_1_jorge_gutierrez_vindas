@@ -61,13 +61,11 @@ void paddig(const char* str, int offset, uint32_t block[2]) {
 }
 
 void main() {
-    // PRUEBA 1
-    // ======================
+
     char mensaje1[] = "HOLA1234";
     int len1 = my_strlen(mensaje1);
     uint32_t key1[4] = {0x12345678, 0x9ABCDEF0, 0xFEDCBA98, 0x76543210};
 
-    print_string("Prueba 1\n");
     print_string("======================\n");
     print_string("Texto original:\n");
     print_string(mensaje1);
@@ -98,46 +96,8 @@ void main() {
         print_block_as_text(block, remaining);
     }
     print_char('\n');
-    print_string("=== Fin Prueba 1 ===\n\n");
-
-    // PRUEBA 2
-    // ======================
-    char mensaje2[] = "Mensaje de prueba para TEA";
-    int len2 = my_strlen(mensaje2);
-    uint32_t key2[4] = {0xA56BABCD, 0x0000FFFF, 0xABCDEF01, 0x12345678};
-
-    print_string("Prueba 2\n");
     print_string("======================\n");
-    print_string("Texto original:\n");
-    print_string(mensaje2);
-    print_char('\n');
 
-    // Cifrado
-    print_string("Texto cifrado (hex):\n");
-    for (int i = 0; i < len2; i += 8) {
-        uint32_t block[2];
-        paddig(mensaje2, i, block);
-
-        tea_encrypt_asm(block, key2);
-
-        print_hex(block[0]); print_char(' ');
-        print_hex(block[1]); print_char('\n');
-    }
-
-    // Descifrado
-    print_string("Texto descifrado:\n");
-    for (int i = 0; i < len2; i += 8) {
-        uint32_t block[2];
-        paddig(mensaje2, i, block);
-
-        tea_encrypt_asm(block, key2);   // cifrar
-        tea_decrypt_asm(block, key2);   // descifrar
-
-        int remaining = len2 - i;
-        print_block_as_text(block, remaining);
-    }
-    print_char('\n');
-    print_string("=== Fin Prueba 2 ===\n");
 
     // Loop infinito
     while (1) {
