@@ -46,8 +46,8 @@ riscv64-unknown-elf-gcc \
     -g3 \
     -gdwarf-4 \
     -c \
-    math_asm.s \
-    -o math_asm.o
+    tea.s \
+    -o tea.o
 
 if [ $? -ne 0 ]; then
     echo "Math assembly compilation failed"
@@ -64,13 +64,13 @@ riscv64-unknown-elf-gcc \
     -gdwarf-4 \
     startup.o \
     main.o \
-    math_asm.o \
+    tea.o \
     -T linker.ld \
     -o main.elf
 
 if [ $? -eq 0 ]; then
     echo "Build successful: main.elf created"
-    echo "Object files: main.o, math_asm.o"
+    echo "Object files: main.o, tea.o"
 else
     echo "Linking failed"
     exit 1

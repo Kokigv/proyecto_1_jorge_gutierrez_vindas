@@ -1,14 +1,9 @@
-# Tiny Encryption Algorithm (TEA) in RISC-V
-# Funciones: tea_encrypt_asm(v0,v1,key) y tea_decrypt_asm(v0,v1,key)
 
     .section .text
     .globl tea_encrypt_asm
     .globl tea_decrypt_asm
 
-# ======================================
 # tea_encrypt_asm(int* v, int* k)
-# v -> a0 = ptr [v0,v1]
-# k -> a1 = ptr [k0,k1,k2,k3]
 # ======================================
 tea_encrypt_asm:
     addi sp, sp, -32
@@ -66,7 +61,6 @@ enc_loop:
     addi sp, sp, 32
     ret
 
-# ======================================
 # tea_decrypt_asm(int* v, int* k)
 # ======================================
 tea_decrypt_asm:
