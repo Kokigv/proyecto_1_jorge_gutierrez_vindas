@@ -1,4 +1,3 @@
-
 #include <stdint.h>
 
 // Declaración de funciones en ensamblador
@@ -30,7 +29,8 @@ int my_strlen(const char *str) {
     return len;
 }
 
-void print_block_as_text(uint32_t block[2]) {
+// Modificado para imprimir solo los bytes válidos
+void print_block_as_text(uint32_t block[2], int bytes_to_print) {
     char buf[9];
     buf[0] = (block[0] >> 24) & 0xFF;
     buf[1] = (block[0] >> 16) & 0xFF;
@@ -40,11 +40,13 @@ void print_block_as_text(uint32_t block[2]) {
     buf[5] = (block[1] >> 16) & 0xFF;
     buf[6] = (block[1] >> 8) & 0xFF;
     buf[7] = block[1] & 0xFF;
-    buf[8] = '\0';
+
+    if (bytes_to_print > 8) bytes_to_print = 8; // un bloque no puede tener más de 8 bytes
+    buf[bytes_to_print] = '\0';
     print_string(buf);
 }
 
-// cero paddig(pading de cero)
+// Cero padding (padding de cero)
 void paddig(const char* str, int offset, uint32_t block[2]) {
     uint8_t temp[8] = {0};
     int len = my_strlen(str + offset);
@@ -63,19 +65,15 @@ void main() {
     // ======================
     char mensaje1[] = "HOLA1234";
     int len1 = my_strlen(mensaje1);
-
-    // keys
     uint32_t key1[4] = {0x12345678, 0x9ABCDEF0, 0xFEDCBA98, 0x76543210};
 
-    print_string("Prueba 1 \n");
-    print_string("====================== \n");
-
- 
+    print_string("Prueba 1\n");
+    print_string("======================\n");
     print_string("Texto original:\n");
     print_string(mensaje1);
     print_char('\n');
 
-    // Cifrado 
+    // Cifrado
     print_string("Texto cifrado (hex):\n");
     for (int i = 0; i < len1; i += 8) {
         uint32_t block[2];
@@ -96,29 +94,25 @@ void main() {
         tea_encrypt_asm(block, key1);   // cifrar
         tea_decrypt_asm(block, key1);   // descifrar
 
-        print_block_as_text(block);
+        int remaining = len1 - i;
+        print_block_as_text(block, remaining);
     }
     print_char('\n');
     print_string("=== Fin Prueba 1 ===\n\n");
 
-
     // PRUEBA 2
     // ======================
-    char mensaje2[] = "HOLA1234";
+    char mensaje2[] = "Mensaje de prueba para TEA";
     int len2 = my_strlen(mensaje2);
-
-    // keys
     uint32_t key2[4] = {0xA56BABCD, 0x0000FFFF, 0xABCDEF01, 0x12345678};
 
     print_string("Prueba 2\n");
     print_string("======================\n");
-
- 
     print_string("Texto original:\n");
     print_string(mensaje2);
     print_char('\n');
 
-    // Cifrado 
+    // Cifrado
     print_string("Texto cifrado (hex):\n");
     for (int i = 0; i < len2; i += 8) {
         uint32_t block[2];
@@ -139,11 +133,11 @@ void main() {
         tea_encrypt_asm(block, key2);   // cifrar
         tea_decrypt_asm(block, key2);   // descifrar
 
-        print_block_as_text(block);
+        int remaining = len2 - i;
+        print_block_as_text(block, remaining);
     }
     print_char('\n');
     print_string("=== Fin Prueba 2 ===\n");
-
 
     // Loop infinito
     while (1) {
