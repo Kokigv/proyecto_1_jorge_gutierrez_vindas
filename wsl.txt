@@ -1,0 +1,26 @@
+wsl
+cd /mnt/c/Users/XPC/Desktop/U/semestre6/arqui/proyecto1/proyecto_1_jorge_gutierrez_vindas
+chmod +x run.sh
+./run.sh
+
+
+
+cd /home/rvqemu-dev/workspace/examples/c-asm
+./build.sh
+./run-qemu.sh
+docker exec -it rvqemu /bin/bash
+
+cd /home/rvqemu-dev/workspace/examples/c-asm
+gdb-multiarch main.elf 
+target remote :1234  
+break _start
+break main
+
+break tea_encrypt_asm
+break tea_decrypt_asm
+
+
+continue
+layout asm
+layout regs
+info registers
