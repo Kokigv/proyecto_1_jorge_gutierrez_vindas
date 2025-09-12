@@ -87,7 +87,7 @@ El proceso incluye:
 
 Esto garantiza que **cada bloque tenga siempre 64 bits listos para el cifrado**.
 
-👉 *(Diagrama 1 aquí)*
+![Flujo de la función paddig (C](Imagenes/pading.png)
 
 ---
 
@@ -103,7 +103,7 @@ Este diagrama representa el proceso de reconstrucción del mensaje legible:
 
 De esta manera, se puede reconstruir el mensaje original después de descifrar.
 
-👉 *(Diagrama 2 aquí)*
+![Flujo de la función print_block_as_text (C)](Imagenes/block.png)
 
 ---
 
@@ -127,7 +127,7 @@ Este diagrama describe el **cifrado de un bloque en ensamblador RISC-V**:
 5. Al finalizar, `v0` y `v1` (ya cifrados) se guardan en memoria.
 6. Se restauran los registros y se retorna al programa en C.
 
-👉 *(Diagrama 3 aquí)*
+![Flujo de la función tea_encrypt_asm (ASM)](Imagenes/encript.png)
 
 ---
 
@@ -151,7 +151,7 @@ El descifrado en ensamblador es el proceso inverso:
 5. Al terminar, los valores originales de `v0` y `v1` se guardan en memoria.
 6. Se restauran los registros y se retorna al programa en C.
 
-👉 *(Diagrama 4 aquí)*
+![Flujo de la función tea_decrypt_asm (ASM)](Imagenes/decript.png)
 
 ---
 
@@ -244,9 +244,9 @@ En la primera evidencia (Figura 1) se muestran los registros antes de iniciar la
 
 Esto demuestra que los parámetros de entrada (bloque y clave) se han cargado correctamente en los registros antes de ejecutar el algoritmo.
 
-👉 **Figura 1. Estado inicial de registros (`a0..a5`) mostrando la clave y el bloque en memoria.**
 
-![Estado inicial de registros](cd7ad16f-2140-4da0-b720-5bf29aeeb3e5.jpg)
+
+![Estado inicial de registros](Imagenes/hex.jpg)
 
 ---
 
@@ -258,9 +258,8 @@ En la segunda evidencia (Figura 2) se observan los registros después de ejecuta
 - El bloque original (`v0`, `v1`) ha sido transformado en una nueva palabra cifrada de 64 bits repartida entre ambos registros.  
 - Se confirma que el resultado corresponde al esperado según los casos de prueba descritos previamente.  
 
-👉 **Figura 2. Registros `t0` y `t1` con el bloque encriptado resultante.**
 
-![Estado final de registros](fb5c1729-4ccf-4891-8d25-989d11817184.jpg)
+![Estado final de registros](Imagenes/encriptado.jpg)
 
 ---
 
@@ -355,4 +354,11 @@ En conclusión, el desarrollo de este proyecto permitió consolidar conocimiento
 
 ## 9. Referencias
 
-👉 *(Espacio reservado para referencias en formato APA, IEEE u otro requerido)*
+
+CC-. (s/f). RISC-V - Estructura de Máquinas. Github.io. Recuperado el 12 de septiembre de 2025, de https://cc-3.github.io/notes/02_Intro-RISCV/
+
+Files · main · Jeferson Gonzalez / rvqemu ·. (s/f). GitLab. Recuperado el 12 de septiembre de 2025, de https://gitlab.com/jgonzalez.tec/rvqemu/-/tree/main?ref_type=heads
+
+What is Docker? (2024, septiembre 10). Docker Documentation. https://docs.docker.com/get-started/docker-overview/
+
+(S/f). Tayloredge.com. Recuperado el 12 de septiembre de 2025, de https://www.tayloredge.com/reference/Mathematics/TEA-XTEA.pdf
