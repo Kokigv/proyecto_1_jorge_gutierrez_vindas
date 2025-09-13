@@ -271,9 +271,25 @@ En la segunda evidencia (Figura 2) se observan los registros después de ejecuta
 
 Con ello, se confirma que la implementación de TEA en RISC-V funciona correctamente, tanto en la simulación en QEMU como en la depuración paso a paso en GDB.
 
+# Cuidado!!!
+
+> **Importante:** al clonar el repositorio, hágalo desde **WSL (Windows Subsystem for Linux)** al inicio del proceso. Por ejemplo:
+
+```bash
+/mnt/c/Users/XPC$ git clone https://github.com/Kokigv/proyecto_1_jorge_gutierrez_vindas.git
+```
+
 ## 7. Instrucciones para compilar, ejecutar y utilizar el sistema
 
 A continuación se detallan los pasos necesarios para compilar el código, ejecutarlo en QEMU y realizar pruebas de depuración con GDB dentro del contenedor Docker.
+
+Antes de iniciar debemos modificar el mensaje y las keys a las de la prueba respectiva:
+
+```c
+char mensaje1[] = "HOLA1234"; // acá se debe realizar el cambio de palabra a la de la respectiva prueba
+int len1 = my_strlen(mensaje1);
+uint32_t key1[4] = {0x12345678, 0x9ABCDEF0, 0xFEDCBA98, 0x76543210}; // acá se deben cambiar las respectivas keys según se necesiten para las pruebas
+```
 
 ### 7.1. Preparación del entorno
 

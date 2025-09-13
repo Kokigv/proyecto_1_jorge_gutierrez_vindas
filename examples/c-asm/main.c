@@ -62,9 +62,9 @@ void paddig(const char* str, int offset, uint32_t block[2]) {
 
 void main() {
 
-    char mensaje1[] = "HOLA1234";
+    char mensaje1[] = "HOLA1234";// aca se debe reailizar el cambio de palabra a la de la respectiva prueba 
     int len1 = my_strlen(mensaje1);
-    uint32_t key1[4] = {0x12345678, 0x9ABCDEF0, 0xFEDCBA98, 0x76543210};
+    uint32_t key1[4] = {0x12345678, 0x9ABCDEF0, 0xFEDCBA98, 0x76543210};// aca se debe cambiar las respectivas keys a segun se necesiten de las preubas
 
     print_string("======================\n");
     print_string("Texto original:\n");
