@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Build script for C+assembly main
-echo "Building C+assembly main...."
+echo "Building C+assembly main..."
 
 # Compile C source to object file
 riscv64-unknown-elf-gcc \
