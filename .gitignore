@@ -1,0 +1,10 @@
+# Ignorar archivos objeto
+*.o
+
+# Ignorar ejecutables ELF
+*.elf
+
+# Opcional: otros binarios comunes
+*.exe
+*.out
+*.bin
